@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('fundraisers.fundraisers.index')" :active="request()->routeIs('fundraisers')">
+                        <x-nav-link :href="route('fundraisers.fundraisers.index')" :active="request()->routeIs('fundraisers.fundraisers.index')">
                             {{ __('Fundraisers') }}
                         </x-nav-link>
                     </div>
@@ -48,11 +48,11 @@
                             </x-nav-link>
                         </div>
 
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                             <x-nav-link :href="route('withdrawals')" :active="request()->routeIs('withdrawals')">
                                 {{ __('Withdrawals') }}
                             </x-nav-link>
-                        </div>
+                        </div> --}}
                     @endif
                 @endif
             @endauth

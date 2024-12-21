@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Fundraisers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Fundraisers;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class FundraisersController extends Controller
 {
@@ -12,7 +14,8 @@ class FundraisersController extends Controller
      */
     public function index()
     {
-        return view('fundraisers');
+        $fundraiser = Fundraisers::where('users_id', Auth::id())->first();
+        return view('fundraisers.fundraisers', compact('fundraiser'));
     }
 
     /**
@@ -28,7 +31,14 @@ class FundraisersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         // Simpan data ke tabel fundraisers
+        Fundraisers::create([
+            'users_id'  => Auth::id(), // Ambil ID user yang sedang login
+            'is_active' => 0, // Set is_active menjadi 0
+        ]);
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Permintaan fundraiser berhasil diajukan!');
     }
 
     /**
@@ -61,5 +71,19 @@ class FundraisersController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function cancel()
+    {
+            // Cari fundraiser berdasarkan user yang login
+        $fundraiser = Fundraisers::where('users_id', Auth::id())->first();
+
+        if ($fundraiser) {
+            // Hapus data fundraiser
+            $fundraiser->delete();
+
+            return redirect()->back()->with('success', 'Permintaan fundraiser berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Permintaan fundraiser tidak ditemukan.');
     }
 }

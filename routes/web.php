@@ -27,7 +27,8 @@ Route::middleware('auth')->group(function () {
 
     // Route::resource()
     Route::prefix('fundraisers')->name('fundraisers.')->group(function (){
-        Route::resource('fundraisers', FundraisersController::class)->middleware('role:fundraisers');
+        Route::resource('fundraisers', FundraisersController::class)->middleware('auth');
+        Route::post('fundraisers/cancel', [FundraisersController::class, 'cancel'])->name('fundraisers.cancel')->middleware('auth');
     });
 
      Route::prefix('admin')->name('admin.')->group(function (){
