@@ -14,6 +14,10 @@ class Fundraisers extends Model
 
     public function users()
     {
-        return $this->belongsTo(User::class, 'users_id');
+        return $this->belongsTo(User::class, 'users_id', 'id');
+    }
+    
+    public function fundraising(){
+        return $this->hasMany(Fundraising::class, 'fundraisers_id');
     }
 }

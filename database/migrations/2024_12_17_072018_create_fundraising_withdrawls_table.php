@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('fundraising_withdrawls', function (Blueprint $table) {
             $table->id();
+            $table->string('bukti');
+            $table->string('nama_bank');
+            $table->string('nomor_rekening');
+            $table->string('nama_rekening');
+            $table->unsignedBigInteger('jumlah_withdrawls');
+            $table->unsignedBigInteger('jumlah_diterima');
+            $table->boolean('sudah_diterima');
+            $table->boolean('sudah_dikirm?');
+            $table->foreignId('fundraiser_id')->constrained()->onDelete('cascade');
+            $table->foreignId('fundraising_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

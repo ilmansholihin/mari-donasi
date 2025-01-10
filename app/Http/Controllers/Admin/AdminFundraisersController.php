@@ -21,11 +21,13 @@ class AdminFundraisersController extends Controller
             'fundraisers.is_active',
             'fundraisers.created_at',
             'users.name as user_name',
-            'users.email as user_email'
+            'users.email as user_email',
+            'users.avatar as user_avatar',
+            'users.whatsapp as user_whatsapp'
         )
         ->get();
 
-    return view('Admins.fundraisers', compact('fundraisers'));
+    return view('Admins.fundraisers.index', compact('fundraisers'));
     }
 
     /**

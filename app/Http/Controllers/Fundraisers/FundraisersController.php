@@ -15,7 +15,7 @@ class FundraisersController extends Controller
     public function index()
     {
         $fundraiser = Fundraisers::where('users_id', Auth::id())->first();
-        return view('fundraisers.fundraisers', compact('fundraiser'));
+        return view('fundraisers.index', compact('fundraiser'));
     }
 
     /**

@@ -1,14 +1,25 @@
 <?php
 
+use App\Models\Fundraisers;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DonaturController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminDonatursController;
+use App\Http\Controllers\Admin\AdminCategoriesController;
 use App\Http\Controllers\Admin\AdminFundraisersController;
 use App\Http\Controllers\Admin\FundraisersControllerAdmin;
+use App\Http\Controllers\Admin\AdminFundraisingsController;
 use App\Http\Controllers\Fundraisers\FundraisersController;
+use App\Http\Controllers\Fundraisers\FundraisersWithdrawalController;
+use App\Http\Controllers\Fundraisers\FundraisersFundraisingController;
+
+Route::get('/admin', function () {
+    return view('welcome');
+});
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
@@ -32,18 +43,34 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function (){
         Route::resource('admins',  AdminController::class)->middleware('role:superAdmin');
         Route::resource('fundraisers',  AdminFundraisersController::class)->middleware('role:superAdmin');
+        Route::resource('categories', AdminCategoriesController::class)->parameters(['categories' => 'category:slug'])->middleware('role:superAdmin');
+        Route::resource('donaturs', AdminDonatursController::class)->middleware('role:superAdmin');
+        Route::resource('fundraising', AdminFundraisingsController::class)->middleware('role:superAdmin');
+        Route::put('fundraising/{id}', [AdminFundraisingsController::class, 'update'])->name('admin.fundraising.update');
+
     });
 
     // Route untuk fundraisers
     Route::prefix('fundraisers')->name('fundraisers.')->group(function (){
-        Route::resource('fundraisers', FundraisersController::class)->middleware('auth');
-        Route::post('fundraisers/cancel', [FundraisersController::class, 'cancel'])->name('fundraisers.cancel')->middleware('auth');
+        Route::resource('fundraisers', FundraisersController::class)->middleware('role:fundraisers');
+        Route::post('fundraisers/cancel', [FundraisersController::class, 'cancel'])->name('fundraisers.cancel')->middleware('role:fundraisers');
+        Route::resource('fundraisings', FundraisersFundraisingController::class)->middleware('role:fundraisers');
+        Route::resource('withdrawal', FundraisersWithdrawalController::class)->middleware('role:fundraisers');
     });
 
      Route::prefix('admin')->name('admin.')->group(function (){
         // Route::resource('admin', FundraisersController::class)->middleware('role:fundraiser');
     });
 });
+
+// 
+Route::resource('/donaturs', DonaturController::class);
+Route::get('donaturs/categori/{slug}', [DonaturController::class, 'showCategory'])->name('donaturs.showCategory');
+Route::get('donaturs/create/{fundraising_id}', [DonaturController::class, 'create'])->name('donaturs.create');
+Route::post('donaturs/store/{fundraising_id}', [DonaturController::class, 'store'])->name('donaturs.store');
+Route::get('donaturs/{id}/payment/{snapToken}', [DonaturController::class, 'payment'])->name('donaturs.payment');
+Route::post('midtrans-notification', [DonaturController::class, 'success'])->name('midtrans.notification');
+
 
 Route::get('/fundraisings', function () {
     return view('fundraisings');

@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('fundraising_phases', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('notes');
+            $table->string('photo');
+            $table->foreignId('fundraising_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
