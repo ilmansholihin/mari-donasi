@@ -14,8 +14,8 @@
                 @if(Auth::user()->hasRole('superAdmin'))
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('dashboardAdmin')" :active="request()->routeIs('dashboardAdmin')">
-                            {{ __('Dashboard Admin') }}
+                        <x-nav-link :href="route('admin.fundraisers.index')" :active="request()->routeIs('admin.fundraisers.index')">
+                            {{ __('Fundraisers') }}
                         </x-nav-link>
                     </div>
                     {{-- selanjutnya untuk data fundraisers --}}

@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminFundraisersController;
+use App\Http\Controllers\Admin\FundraisersControllerAdmin;
 use App\Http\Controllers\Fundraisers\FundraisersController;
 
 Route::get('/', function () {
@@ -12,9 +15,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/dashboard/admin', function () {
-    return view('dashboardAdmin');
-})->middleware(['auth', 'verified'])->name('dashboardAdmin');
+// Route::get('/dashboard/admin', function () {
+//     return view('dashboardAdmin');
+// })->middleware(['auth', 'verified'])->name('dashboardAdmin');
 
 // Route::get('/fundraisers', function () {
 //     return view('fundraisers');
@@ -25,7 +28,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Route::resource()
+    // route untuk admin
+    Route::prefix('admin')->name('admin.')->group(function (){
+        Route::resource('admins',  AdminController::class)->middleware('role:superAdmin');
+        Route::resource('fundraisers',  AdminFundraisersController::class)->middleware('role:superAdmin');
+    });
+
+    // Route untuk fundraisers
     Route::prefix('fundraisers')->name('fundraisers.')->group(function (){
         Route::resource('fundraisers', FundraisersController::class)->middleware('auth');
         Route::post('fundraisers/cancel', [FundraisersController::class, 'cancel'])->name('fundraisers.cancel')->middleware('auth');
